@@ -15,7 +15,7 @@ import unittest
 
 
 '''
-Variables
+THIS IS HOW VARIABLES SHOULD BE FORMATTED
 - Ship Mode: str()
 - Segment: str()
 - Country: str()
@@ -61,12 +61,38 @@ def net_profit_margin_per_selected_state(rows, selected_state):
             total_sales += float(data["Sales"])
     
     #returning net profit margin at 2 decimal places rounded 
-    return(f"{total_profit/total_sales * 100:.2f}%")
+    return(f"The net profit margin for {selected_state} is {total_profit/total_sales * 100:.2f}%")
 
+def dict_of_city_and_revenue_per_city(rows, selected_state):
+    #first step need to identify aggregate list of city before adding up sales
+    list_of_city = []
+    for data in rows:
+        if data["State"] == selected_state:
+            if data["City"] not in list_of_city:
+                list_of_city.append(data["City"])
+            else:
+                continue
+        else:
+            continue
+    
+    #second step is to loop through each row and see if the data is in the list of city, then cherry pick to make a dictionary
+    return_dict = {}
+    for data in rows:
+        if data["City"] in list_of_city:
+            if data["City"] in return_dict.keys():
+                return_dict[data["City"]] += float(data["Sales"])
+            else:
+                return_dict[data["City"]] = float(data["Sales"])
+        else:
+            continue
+    print(f"The selected state of {selected_state} had these cities with these respective sales:")
+    return(return_dict)
+        
 def main():
     file_name = "SampleSuperstore.csv"
     data = read_data(file_name)
     print(net_profit_margin_per_selected_state(data,"New York"))
+    print(dict_of_city_and_revenue_per_city(data, "Georgia"))
 
 if __name__ == "__main__":
     main()
