@@ -93,6 +93,14 @@ def write_result_of_net_profit_margin_to_txt(file_name, profit_margin_text):
         new_file.write(profit_margin_text)
     return (None)
 
+def write_result_of_dict_of_city_and_revenue_per_city(file_name, city_revenue_dict):
+    with open(file_name, "w") as new_file:
+        writer = csv.writer(new_file)
+        writer.writerow(["City", "Total Sales"])
+        for city, total_revenue in city_revenue_dict:
+            writer.writerow([city, round(total_revenue, 2)])
+    return (None)
+
 def main():
     file_name = "SampleSuperstore.csv"
     data = read_data(file_name)
