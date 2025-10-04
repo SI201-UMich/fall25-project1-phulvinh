@@ -3,8 +3,7 @@
 # Your student id: 10566445
 # Your email: phule@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT): ChatGPT
-# Asked ChatGPT for debugging when needed, all code is original
-# NOTE: I AM A STUDENT CURRENTLY ENROLLED IN SI 305, I AM USING PANDAS AND MATPLOTLIB HERE TO TRAIN MYSELF MORE
+# Asked ChatGPT for debugging when needed, also asked ChatGPT to give me sample data (you'll see later in comments), all code is original
 # ADDITIONAL NOTE: THE DATASET CHOSEN IS SAMPLE SUPERSTORE DATASET
 
 #Importing dependencies
@@ -12,7 +11,6 @@ import math
 import csv
 import os
 import unittest
-
 
 '''
 THIS IS HOW VARIABLES SHOULD BE FORMATTED
@@ -125,5 +123,67 @@ def main():
     write_result_of_dict_of_city_and_revenue_per_city_to_csv("city_revenue_GA.csv", result_of_calculation_2)
     print("Results written to profit_margin_NY.txt and city_revenue_GA.csv")
 
+
+'''
+I believe that it would be stupid for me to try to use the function on the actual data
+as I can't really manually check if it actually works or not. Literally if I were to use
+my own function to check if my function works correctly or not, thatwould defeat the entire 
+purpose of even writing test case in the beginning. As such I asked ChatGPT to draft me some 
+fake data so I could use unittest on it and perhaps it might work.
+'''
+class TestCalculations(unittest.TestCase):
+    def setUp(self):
+        #fake sample data for test cases
+        self.sample_rows = [
+            {"State": "New York", "City": "Albany", "Profit": "100", "Sales": "500"},
+            {"State": "New York", "City": "Buffalo", "Profit": "50", "Sales": "200"},
+            {"State": "Georgia", "City": "Atlanta", "Profit": "300", "Sales": "600"},
+            {"State": "Georgia", "City": "Savannah", "Profit": "150", "Sales": "300"},
+            {"State": "California", "City": "LA", "Profit": "0", "Sales": "0"},
+        ]
+
+    def test_net_profit_margin_general_case(self):
+        #(150/700)*100 = 21.43%
+        result = net_profit_margin_per_selected_state(self.sample_rows, "New York")
+        self.assertEqual(result, "The net profit margin for New York is 21.43%.")
+
+    def test_net_profit_margin_another_general_case(self):
+        #(450/900)*100 = 50.00%
+        result = net_profit_margin_per_selected_state(self.sample_rows, "Georgia")
+        self.assertEqual(result, "The net profit margin for Georgia is 50.00%.")
+
+    def test_net_profit_margin_state_not_found(self):
+        result = net_profit_margin_per_selected_state(self.sample_rows, "Texas")
+        # no data, avoid ZeroDivisionError
+        self.assertIn("0.00%", result)
+
+    def test_net_profit_margin_zero_sales(self):
+        # CA: sales = 0 => should not divide by zero; handle gracefully
+        result = net_profit_margin_per_selected_state(self.sample_rows, "California")
+        self.assertIn("0.00%", result)
+    
+    def test_city_revenue_general_case(self):
+        # GA: Atlanta=600, Savannah=300
+        result = dict_of_city_and_revenue_per_city(self.sample_rows, "Georgia")
+        expected = {"Atlanta": 600.0, "Savannah": 300.0}
+        self.assertEqual(result, expected)
+
+    def test_city_revenue_another_general_case(self):
+        # NY: Albany=500, Buffalo=200
+        result = dict_of_city_and_revenue_per_city(self.sample_rows, "New York")
+        expected = {"Albany": 500.0, "Buffalo": 200.0}
+        self.assertEqual(result, expected)
+
+    def test_city_revenue_state_not_found(self):
+        # Should return empty dict if no cities in state
+        result = dict_of_city_and_revenue_per_city(self.sample_rows, "Texas")
+        self.assertEqual(result, {})
+
+    def test_city_revenue_empty_list(self):
+        # Empty input list
+        result = dict_of_city_and_revenue_per_city([], "New York")
+        self.assertEqual(result, {})
+
 if __name__ == "__main__":
     main()
+    unittest.main()
