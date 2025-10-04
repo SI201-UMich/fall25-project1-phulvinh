@@ -61,7 +61,7 @@ def net_profit_margin_per_selected_state(rows, selected_state):
             total_sales += float(data["Sales"])
     
     #returning net profit margin at 2 decimal places rounded 
-    return(f"The net profit margin for {selected_state} is {total_profit/total_sales * 100:.2f}%")
+    return(f"The net profit margin for {selected_state} is {total_profit/total_sales * 100:.2f}%.")
 
 def dict_of_city_and_revenue_per_city(rows, selected_state):
     #first step need to identify aggregate list of city before adding up sales
@@ -89,23 +89,39 @@ def dict_of_city_and_revenue_per_city(rows, selected_state):
     return(return_dict)
 
 def write_result_of_net_profit_margin_to_txt(file_name, profit_margin_text):
+    
+    #open new text file taking in only file name and the string response from profit margin calculation function
     with open(file_name, "w") as new_file:
         new_file.write(profit_margin_text)
-    return (None)
+    return(None)
 
-def write_result_of_dict_of_city_and_revenue_per_city(file_name, city_revenue_dict):
+def write_result_of_dict_of_city_and_revenue_per_city_to_csv(file_name, city_revenue_dict):
+    
+    #open new csv file taking in new file name and pre writing the header of the file then looping through return dict to write rows
     with open(file_name, "w") as new_file:
         writer = csv.writer(new_file)
         writer.writerow(["City", "Total Sales"])
-        for city, total_revenue in city_revenue_dict:
+        for city, total_revenue in city_revenue_dict.items():
             writer.writerow([city, round(total_revenue, 2)])
-    return (None)
+    return(None)
 
 def main():
+    #identify file name then calling the read_data function to turn data into a readable and iterable list of dict representing rows
     file_name = "SampleSuperstore.csv"
     data = read_data(file_name)
-    print(net_profit_margin_per_selected_state(data,"New York"))
-    print(dict_of_city_and_revenue_per_city(data, "Georgia"))
+    
+    #calc 1: Net profit margin of all New York state shipment
+    result_of_calculation_1 = net_profit_margin_per_selected_state(data,"New York")
+    print(result_of_calculation_1)
+
+    #calc 2: Total sales for categorize by each city within the Georgia state
+    result_of_calculation_2 = dict_of_city_and_revenue_per_city(data, "Georgia")
+    print(result_of_calculation_2)
+
+    #write output to files
+    write_result_of_net_profit_margin_to_txt("profit_margin_NY.txt", result_of_calculation_1)
+    write_result_of_dict_of_city_and_revenue_per_city_to_csv("city_revenue_GA.csv", result_of_calculation_2)
+    print("Results written to profit_margin_NY.txt and city_revenue_GA.csv")
 
 if __name__ == "__main__":
     main()
