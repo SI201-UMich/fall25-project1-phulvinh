@@ -52,7 +52,7 @@ def net_profit_margin_per_selected_state(rows, selected_state):
     
     #net profit margin = net profit / total sales
     total_sales = 0
-    total_profit = 0
+    total_profit = 0 
     
     #aggregating total sales and total profit for specific state
     for data in rows:
