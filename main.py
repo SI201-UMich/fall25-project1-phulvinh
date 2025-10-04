@@ -26,17 +26,26 @@ Variables
 - Sales: float()
 '''
 
-def read_data(filename):
-    source_dir = os.path.dirname(__file__)
-    full_path = os.path.join(source_dir, filename)
+def read_data(file_name):
+    #adding weird path sourcing method for vsc to find file
+    source_directory = os.path.dirname(__file__)
+    full_csv_file_path = os.path.join(source_directory, file_name)
     
-    rows = []
-    with open(full_path, mode='r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            clean_row = {k: v.strip() for k, v in row.items()}
-            rows.append(clean_row)
-    return rows
+    #creating a list to store the variety of dicts
+    all_rows = []
+    with open(full_csv_file_path, 'r') as file_handle:
+        file_data = csv.DictReader(file_handle)
+
+        #loop through each row
+        for row in file_data:
+            each_dict = {}
+            
+            #DictReader seperates each data according to column header and column data per row, need to finalize the dict and append
+            for column_header, column_data in row.items():
+                each_dict[column_header] = column_data
+            all_rows.append(each_dict)
+
+    return all_rows
 
 def main():
     file_name = "SampleSuperstore.csv"
