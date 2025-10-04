@@ -87,7 +87,12 @@ def dict_of_city_and_revenue_per_city(rows, selected_state):
             continue
     print(f"The selected state of {selected_state} had these cities with these respective sales:")
     return(return_dict)
-        
+
+def write_result_of_net_profit_margin_to_txt(file_name, profit_margin_text):
+    with open(file_name, "w") as new_file:
+        new_file.write(profit_margin_text)
+    return (None)
+
 def main():
     file_name = "SampleSuperstore.csv"
     data = read_data(file_name)
