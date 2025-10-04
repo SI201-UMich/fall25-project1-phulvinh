@@ -60,6 +60,9 @@ def net_profit_margin_per_selected_state(rows, selected_state):
             total_profit += float(data["Profit"])
             total_sales += float(data["Sales"])
     
+    if total_sales == 0:
+        return f"The net profit margin for {selected_state} is 0.00%."
+
     #returning net profit margin at 2 decimal places rounded 
     return(f"The net profit margin for {selected_state} is {total_profit/total_sales * 100:.2f}%.")
 
@@ -154,33 +157,33 @@ class TestCalculations(unittest.TestCase):
 
     def test_net_profit_margin_state_not_found(self):
         result = net_profit_margin_per_selected_state(self.sample_rows, "Texas")
-        # no data, avoid ZeroDivisionError
+        #no data, avoid ZeroDivisionError
         self.assertIn("0.00%", result)
 
     def test_net_profit_margin_zero_sales(self):
-        # CA: sales = 0 => should not divide by zero; handle gracefully
+        #should not divide by zero
         result = net_profit_margin_per_selected_state(self.sample_rows, "California")
         self.assertIn("0.00%", result)
     
     def test_city_revenue_general_case(self):
-        # GA: Atlanta=600, Savannah=300
+        #GA: Atlanta=600, Savannah=300
         result = dict_of_city_and_revenue_per_city(self.sample_rows, "Georgia")
         expected = {"Atlanta": 600.0, "Savannah": 300.0}
         self.assertEqual(result, expected)
 
     def test_city_revenue_another_general_case(self):
-        # NY: Albany=500, Buffalo=200
+        #NY: Albany=500, Buffalo=200
         result = dict_of_city_and_revenue_per_city(self.sample_rows, "New York")
         expected = {"Albany": 500.0, "Buffalo": 200.0}
         self.assertEqual(result, expected)
 
     def test_city_revenue_state_not_found(self):
-        # Should return empty dict if no cities in state
+        #return empty dict if no cities in state
         result = dict_of_city_and_revenue_per_city(self.sample_rows, "Texas")
         self.assertEqual(result, {})
 
     def test_city_revenue_empty_list(self):
-        # Empty input list
+        #empty input list
         result = dict_of_city_and_revenue_per_city([], "New York")
         self.assertEqual(result, {})
 
