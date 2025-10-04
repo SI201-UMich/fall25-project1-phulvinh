@@ -50,6 +50,8 @@ def read_data(file_name):
     return all_rows
 
 def net_profit_margin_per_selected_state(rows, selected_state):
+    ''' Function references the state column, the profit column, and the sales column'''
+    
     #net profit margin = net profit / total sales
     total_sales = 0
     total_profit = 0
