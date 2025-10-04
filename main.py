@@ -67,6 +67,8 @@ def net_profit_margin_per_selected_state(rows, selected_state):
     return(f"The net profit margin for {selected_state} is {total_profit/total_sales * 100:.2f}%.")
 
 def dict_of_city_and_revenue_per_city(rows, selected_state):
+    ''' Function references the state column, the city column, and the sales column'''
+    
     #first step need to identify aggregate list of city before adding up sales
     list_of_city = []
     for data in rows:
