@@ -11,6 +11,8 @@
 import math
 import csv
 import os
+import unittest
+
 
 '''
 Variables
@@ -47,10 +49,24 @@ def read_data(file_name):
 
     return all_rows
 
+def net_profit_margin_per_selected_state(rows, selected_state):
+    #net profit margin = net profit / total sales
+    total_sales = 0
+    total_profit = 0
+    
+    #aggregating total sales and total profit for specific state
+    for data in rows:
+        if data["State"] == selected_state:
+            total_profit += float(data["Profit"])
+            total_sales += float(data["Sales"])
+    
+    #returning net profit margin at 2 decimal places rounded 
+    return(f"{total_profit/total_sales * 100:.2f}%")
+
 def main():
     file_name = "SampleSuperstore.csv"
     data = read_data(file_name)
-    print(data)
+    print(net_profit_margin_per_selected_state(data,"New York"))
 
 if __name__ == "__main__":
     main()
